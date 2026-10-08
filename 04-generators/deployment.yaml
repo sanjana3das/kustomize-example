@@ -1,32 +1,57 @@
 apiVersion: apps/v1
 kind: Deployment
+
 metadata:
   name: generator-demo
+
 spec:
   replicas: 1
+
   selector:
     matchLabels:
       app: generator-demo
+
   template:
     metadata:
       labels:
         app: generator-demo
+
     spec:
       containers:
       - name: nginx
         image: nginx:1.19
+
         envFrom:
+
         - configMapRef:
             name: app-settings
+            # Connects to generated ConfigMap:
+            # app-settings-6ffk52mt9t
+            # Provides DATABASE_URL and APP_PORT
+
         - configMapRef:
             name: app-environment
+            # Connects to generated ConfigMap:
+            # app-environment-km8c5cttbf
+            # Provides LOG_LEVEL, MAX_CONNECTIONS, APP_MODE
+
+        - secretRef:
+            name: app-secrets
+            # Connects to generated Secret:
+            # app-secrets-hckk9dtftk
+            # Provides API_KEY and DB_PASSWORD
 
         volumeMounts:
         - name: config-volume
           mountPath: /etc/app-config
+          # Mounts the ConfigMap as files inside the container
 
       volumes:
       - name: config-volume
+        # Volume name is just a connection name.
+        # It connects volumes[] with volumeMounts[].
         configMap:
           name: app-config
-
+          # Connects to generated ConfigMap:
+          # app-config-62284b8g49
+          # config.json appears inside /etc/app-config/

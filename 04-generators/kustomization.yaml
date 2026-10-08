@@ -3,23 +3,32 @@ kind: Kustomization
 
 resources:
 - deployment.yaml
+
 configMapGenerator:
+
 - name: app-settings
+  # Logical ConfigMap name → Deployment uses this name.
+  # Kustomize generates: app-settings-6ffk52mt9t
   literals:
   - DATABASE_URL=localhost:5432
   - APP_PORT=7070
 
 - name: app-config
+  # Logical ConfigMap name → mounted as a file inside the Pod.
+  # Kustomize generates: app-config-62284b8g49
   files:
   - config.json
-#  - settings.properties
 
 - name: app-environment
+  # Logical ConfigMap name → env variables from app.env.
+  # Kustomize generates: app-environment-km8c5cttbf
   envs:
   - app.env
 
-#secretGenerator:
-#- name: app-secrets
-#  literals:
-#  - api-key=my-secret-key
-#  - password=very-secret
+secretGenerator:
+
+- name: app-secrets
+  # Logical Secret name → Deployment uses this name.
+  # Kustomize generates: app-secrets-hckk9dtftk
+  envs:
+  - app-secret.env
