@@ -14,6 +14,10 @@ configMapGenerator:
   - config.json
 #  - settings.properties
 
+- name: app-environment
+  envs:
+  - app.env
+
 #secretGenerator:
 #- name: app-secrets
 #  literals:

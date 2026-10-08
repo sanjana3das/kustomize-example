@@ -18,6 +18,8 @@ spec:
         envFrom:
         - configMapRef:
             name: app-settings
+        - configMapRef:
+            name: app-environment
 
         volumeMounts:
         - name: config-volume
@@ -27,3 +29,4 @@ spec:
       - name: config-volume
         configMap:
           name: app-config
+
