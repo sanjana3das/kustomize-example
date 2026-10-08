@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: generator-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: generator-demo
+  template:
+    metadata:
+      labels:
+        app: generator-demo
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.19
+        envFrom:
+        - configMapRef:
+            name: app-settings
+
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/app-config
+
+      volumes:
+      - name: config-volume
+        configMap:
+          name: app-config
